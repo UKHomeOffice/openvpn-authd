@@ -1,0 +1,56 @@
+<html>
+<head>
+  <title>OpenVPN Config</title>
+<style>
+    body {
+        background-color: white
+    }
+    .code {
+        text-color: black;
+    }
+    .code pre {
+        text-color: black;
+    }
+</style>
+</head>
+<body>
+<div class="code">
+<pre>
+#
+# Expiration of Certificate: {{ .expires_in }}
+# Session Duration: {{ .ttl }}
+#
+
+client
+dev tun
+proto tcp
+
+{{ range $server := .openvpn_servers }}remote {{ $server }}
+{{ end }}
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca [inline]
+cert [inline]
+key [inline]
+verb 1
+keepalive 10 900
+inactive 3600
+comp-lzo
+
+&lt;ca&gt;
+{{ .issuing_ca }}
+&lt;/ca&gt;
+
+&lt;cert&gt;
+{{ .certificate }}
+&lt;/cert&gt;
+
+&lt;key&gt;
+{{ .private_key }}
+&lt;/key&gt;
+</pre>
+</div>
+</body>
+</html>
