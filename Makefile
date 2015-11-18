@@ -1,6 +1,6 @@
 
 NAME=openvpn-authd
-AUTHOR=gambol99
+AUTHOR=ukhomeofficedigital
 HARDWARE=$(shell uname -m)
 VERSION=$(shell awk '/Version =/ { print $$3 }' main.go | sed 's/"//g')
 DEPS=$(shell go list -f '{{range .TestImports}}{{.}} {{end}}' ./...)
@@ -19,11 +19,6 @@ build:
 docker: static
 	@echo "--> Building the docker image"
 	sudo docker build -t ${AUTHOR}/${NAME}:${VERSION} .
-
-push: docker
-	@echo "--> Pushing the image to docker.io"
-	sudo docker tag -f ${AUTHOR}/${NAME}:${VERSION} docker.io/${AUTHOR}/${NAME}:${VERSION}
-	sudo docker push docker.io/${AUTHOR}/${NAME}:${VERSION}
 
 static:
 	@echo "--> Compiling the static binary"
